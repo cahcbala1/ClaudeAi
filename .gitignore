@@ -1,0 +1,19 @@
+# ---------- Python / Backend ----------
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# ---------- Variables de entorno (credenciales) ----------
+# Nunca subir .env al repositorio; sí se sube .env.example
+.env
+
+# ---------- Node / Frontend ----------
+node_modules/
+dist/
+
+# ---------- Editores y sistema operativo ----------
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
