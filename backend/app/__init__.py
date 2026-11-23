@@ -1,5 +1,6 @@
 """Fábrica de la aplicación Flask de SIGO."""
 from flask import Flask, jsonify
+from sqlalchemy import text
 from werkzeug.exceptions import HTTPException
 
 from .config import Config
@@ -30,10 +31,15 @@ def create_app(config_class=Config):
 
     registrar_manejadores_error(app)
 
-    # Ruta de prueba para verificar que la API está en funcionamiento.
+    # Ruta de prueba: verifica que la API y la base de datos respondan.
     @app.get("/api/health")
     def health():
-        return jsonify({"estado": "ok", "app": "SIGO"})
+        try:
+            db.session.execute(text("SELECT 1"))
+            return jsonify({"estado": "ok", "app": "SIGO", "base_de_datos": "conectada"})
+        except Exception as e:
+            app.logger.error("No se pudo conectar a la base de datos: %s", e)
+            return jsonify({"estado": "error", "app": "SIGO", "base_de_datos": "sin conexión"}), 503
 
     # Los Blueprints (auth, usuarios, productos, ...) se registrarán aquí
     # en las siguientes etapas.
