@@ -29,6 +29,9 @@ def create_app(config_class=Config):
     db.init_app(app)
     jwt.init_app(app)
 
+    # Registra los modelos en SQLAlchemy (necesario para crear las tablas).
+    from . import models  # noqa: F401
+
     registrar_manejadores_error(app)
 
     # Ruta de prueba: verifica que la API y la base de datos respondan.
