@@ -30,7 +30,7 @@ export default function Cocina() {
       // Los listos se piden aparte y solo los de hoy.
       const [activos, listos] = await Promise.all([
         api("/pedidos"),
-        api(`/pedidos?estado=listo&fecha=${fechaDeHoy()}`),
+        api(`/pedidos?estado=listo&fecha=${fechaDeHoy()}&abiertos=1`),
       ]);
       setPedidos([...activos, ...listos]);
       setError("");

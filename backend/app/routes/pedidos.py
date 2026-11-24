@@ -12,6 +12,7 @@ Flujo de estados (quién puede hacer cada cambio):
 """
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import current_user, jwt_required
+from sqlalchemy import and_, or_
 
 from ..extensions import db
 from ..models import ESTADOS, DetallePedido, Pedido, Producto
@@ -88,7 +89,10 @@ def validar_detalles(detalles):
 def listar():
     """Lista pedidos según el rol del usuario.
 
-    Filtros opcionales: ?estado=pendiente  ?mesa=4  ?fecha=2026-11-24 (solo admin y mesero)
+    Filtros opcionales: ?estado=pendiente  ?mesa=4  ?fecha=2026-11-24
+    Con ?fecha=...&abiertos=1 también se incluyen los pedidos de días anteriores que
+    siguen abiertos (en cocina, listos, o entregados sin cobrar), para que un pedido
+    creado antes de medianoche no desaparezca de la vista de hoy.
     """
     consulta = Pedido.query
     estado = request.args.get("estado")
@@ -118,7 +122,15 @@ def listar():
         rango = rango_de_fecha(fecha)
         if rango is None:
             return error("La fecha debe tener el formato AAAA-MM-DD")
-        consulta = consulta.filter(Pedido.creado_en >= rango[0], Pedido.creado_en < rango[1])
+        del_dia = and_(Pedido.creado_en >= rango[0], Pedido.creado_en < rango[1])
+        if request.args.get("abiertos") == "1":
+            abierto = or_(
+                Pedido.estado.in_(("pendiente", "en_preparacion", "listo")),
+                and_(Pedido.estado == "entregado", ~Pedido.pago.has()),
+            )
+            consulta = consulta.filter(or_(del_dia, abierto))
+        else:
+            consulta = consulta.filter(del_dia)
 
     # La cocina atiende primero los pedidos más antiguos; los demás ven primero los recientes.
     if current_user.rol == "cocina":

@@ -27,7 +27,7 @@ export default function Panel() {
   const cargar = useCallback(async () => {
     const hoy = fechaDeHoy();
     try {
-      const [reporte, lista] = await Promise.all([api(`/reportes/dia?fecha=${hoy}`), api(`/pedidos?fecha=${hoy}`)]);
+      const [reporte, lista] = await Promise.all([api(`/reportes/dia?fecha=${hoy}`), api(`/pedidos?fecha=${hoy}&abiertos=1`)]);
       setVentas(reporte);
       setPedidos(lista);
       setError("");

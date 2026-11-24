@@ -165,7 +165,7 @@ Todas las rutas empiezan con `/api`. Salvo el login, requieren la cabecera
 | POST   | `/productos`                  | admin                | Crea un producto                                     |
 | PUT    | `/productos/<id>`             | admin                | Edita un producto                                    |
 | DELETE | `/productos/<id>`             | admin                | Elimina un producto que nunca estuvo en un pedido    |
-| GET    | `/pedidos`                    | todos                | Lista pedidos según el rol (`?estado=`, `?mesa=`, `?fecha=`) |
+| GET    | `/pedidos`                    | todos                | Lista pedidos según el rol (`?estado=`, `?mesa=`, `?fecha=`; con `&abiertos=1` suma los de días anteriores que siguen abiertos) |
 | GET    | `/pedidos/<id>`               | todos                | Detalle de un pedido                                 |
 | POST   | `/pedidos`                    | mesero               | Registra un pedido                                   |
 | PATCH  | `/pedidos/<id>/estado`        | según el flujo       | Cambia el estado de un pedido                        |

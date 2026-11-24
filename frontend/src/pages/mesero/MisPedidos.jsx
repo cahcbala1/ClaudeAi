@@ -33,6 +33,8 @@ export default function MisPedidos() {
     const parametros = new URLSearchParams();
     if (estado) parametros.set("estado", estado);
     if (fecha) parametros.set("fecha", fecha);
+    // Hoy también se muestran los pedidos de días anteriores que siguen abiertos.
+    if (fecha === fechaDeHoy()) parametros.set("abiertos", "1");
     const vigente = nuevaPeticion();
     try {
       const respuesta = await api(`/pedidos?${parametros}`);

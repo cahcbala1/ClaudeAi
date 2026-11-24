@@ -26,6 +26,8 @@ export default function Pedidos() {
     if (estado) parametros.set("estado", estado);
     if (/^\d+$/.test(mesa)) parametros.set("mesa", mesa);
     if (fecha) parametros.set("fecha", fecha);
+    // Hoy también se muestran los pedidos de días anteriores que siguen abiertos.
+    if (fecha === fechaDeHoy()) parametros.set("abiertos", "1");
     const vigente = nuevaPeticion();
     try {
       const respuesta = await api(`/pedidos?${parametros}`);
