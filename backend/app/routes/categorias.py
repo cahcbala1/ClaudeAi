@@ -11,7 +11,7 @@ from sqlalchemy import func
 from ..extensions import db
 from ..models import Categoria
 from ..utils.decorators import rol_requerido
-from ..utils.validators import campos_faltantes, error, leer_json
+from ..utils.validators import campos_faltantes, error, leer_json, limpiar_descripcion
 
 bp = Blueprint("categorias", __name__, url_prefix="/api/categorias")
 
@@ -28,14 +28,6 @@ def validar_campos(datos):
             return "La descripción no puede superar los 255 caracteres"
 
     return None
-
-
-def limpiar_descripcion(valor):
-    """Convierte una descripción vacía en None (NULL en la base de datos)."""
-    if valor is None:
-        return None
-    texto = str(valor).strip()
-    return texto or None
 
 
 def nombre_en_uso(nombre, excluir_id=None):

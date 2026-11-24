@@ -18,6 +18,14 @@ def campos_faltantes(datos, campos):
     return faltantes
 
 
+def limpiar_descripcion(valor):
+    """Convierte una descripción vacía en None (NULL en la base de datos)."""
+    if valor is None:
+        return None
+    texto = str(valor).strip()
+    return texto or None
+
+
 def error(mensaje, codigo=400):
     """Respuesta de error con el formato común de la API: {"error": "mensaje"}."""
     return jsonify({"error": mensaje}), codigo
