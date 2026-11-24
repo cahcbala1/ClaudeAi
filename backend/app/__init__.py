@@ -46,9 +46,10 @@ def create_app(config_class=Config):
             return jsonify({"estado": "error", "app": "SIGO", "base_de_datos": "sin conexión"}), 503
 
     # Blueprints (módulos de la API). Los demás se agregarán en las siguientes etapas.
-    from .routes import auth, usuarios
+    from .routes import auth, categorias, usuarios
     app.register_blueprint(auth.bp)
     app.register_blueprint(usuarios.bp)
+    app.register_blueprint(categorias.bp)
 
     return app
 
