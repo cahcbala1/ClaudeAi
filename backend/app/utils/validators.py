@@ -40,9 +40,9 @@ def rango_de_fecha(texto):
     """
     try:
         inicio = datetime.strptime(texto, "%Y-%m-%d")
-    except ValueError:
+        return inicio, inicio + timedelta(days=1)
+    except (ValueError, OverflowError):  # OverflowError: 9999-12-31 no tiene "día siguiente"
         return None
-    return inicio, inicio + timedelta(days=1)
 
 
 def error(mensaje, codigo=400):

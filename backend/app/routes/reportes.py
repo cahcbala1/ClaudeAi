@@ -90,9 +90,9 @@ def reporte_mes():
     anio = request.args.get("anio", str(hoy.year))
     mes = request.args.get("mes", str(hoy.month))
 
-    if not anio.isdigit() or not 2000 <= int(anio) <= 2100:
+    if not anio.isdecimal() or not 2000 <= int(anio) <= 2100:
         return error("El año debe ser un número entre 2000 y 2100")
-    if not mes.isdigit() or not 1 <= int(mes) <= 12:
+    if not mes.isdecimal() or not 1 <= int(mes) <= 12:
         return error("El mes debe ser un número entre 1 y 12")
     anio, mes = int(anio), int(mes)
 

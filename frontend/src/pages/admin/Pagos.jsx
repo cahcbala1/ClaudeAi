@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { api } from "../../api/client.js";
+import { usePeticionVigente } from "../../utils/peticiones.js";
 import { NOMBRE_METODO } from "../../estados.js";
 import { fechaDeHoy, formatearHora, formatearPrecio } from "../../utils/formato.js";
 
@@ -12,19 +13,23 @@ export default function Pagos() {
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
 
+  const nuevaPeticion = usePeticionVigente();
   const cargar = useCallback(async () => {
     const parametros = new URLSearchParams();
     if (fecha) parametros.set("fecha", fecha);
     if (metodo) parametros.set("metodo", metodo);
+    const vigente = nuevaPeticion();
     try {
-      setPagos(await api(`/pagos?${parametros}`));
+      const respuesta = await api(`/pagos?${parametros}`);
+      if (!vigente()) return;
+      setPagos(respuesta);
       setError("");
     } catch (e) {
-      setError(e.message);
+      if (vigente()) setError(e.message);
     } finally {
       setCargando(false);
     }
-  }, [fecha, metodo]);
+  }, [fecha, metodo, nuevaPeticion]);
 
   useEffect(() => {
     cargar();

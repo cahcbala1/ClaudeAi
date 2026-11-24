@@ -109,7 +109,7 @@ def listar():
 
     mesa = request.args.get("mesa")
     if mesa:
-        if not mesa.isdigit():
+        if not mesa.isdecimal():
             return error("mesa debe ser un número entero")
         consulta = consulta.filter(Pedido.mesa == int(mesa))
 
@@ -189,7 +189,9 @@ def crear():
 @jwt_required()
 def cambiar_estado(pedido_id):
     """Cambia el estado de un pedido. Cuerpo: {"estado": "en_preparacion"}"""
-    pedido = db.session.get(Pedido, pedido_id)
+    # Bloquea la fila hasta el commit: si el mesero cancela y la cocina empieza a
+    # preparar al mismo tiempo, la segunda petición espera y ve el estado ya cambiado.
+    pedido = db.session.get(Pedido, pedido_id, with_for_update=True)
     if pedido is None:
         return error("Pedido no encontrado", 404)
 

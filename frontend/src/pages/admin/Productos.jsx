@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { api } from "../../api/client.js";
+import { usePeticionVigente } from "../../utils/peticiones.js";
 import Modal from "../../components/Modal.jsx";
 import { formatearPrecio } from "../../utils/formato.js";
 
@@ -15,24 +16,27 @@ export default function Productos() {
   // null = formulario cerrado, {} = nuevo producto, objeto = producto a editar.
   const [editando, setEditando] = useState(null);
 
+  const nuevaPeticion = usePeticionVigente();
   const cargar = useCallback(async () => {
     const parametros = new URLSearchParams();
     if (filtroCategoria) parametros.set("categoria_id", filtroCategoria);
     if (filtroDisponible) parametros.set("disponible", filtroDisponible);
+    const vigente = nuevaPeticion();
     try {
-      setError("");
       const [listaProductos, listaCategorias] = await Promise.all([
         api(`/productos?${parametros}`),
         api("/categorias"),
       ]);
+      if (!vigente()) return;
+      setError("");
       setProductos(listaProductos);
       setCategorias(listaCategorias);
     } catch (e) {
-      setError(e.message);
+      if (vigente()) setError(e.message);
     } finally {
       setCargando(false);
     }
-  }, [filtroCategoria, filtroDisponible]);
+  }, [filtroCategoria, filtroDisponible, nuevaPeticion]);
 
   useEffect(() => {
     cargar();

@@ -84,7 +84,7 @@ def listar():
 
     categoria_id = request.args.get("categoria_id")
     if categoria_id:
-        if not categoria_id.isdigit():
+        if not categoria_id.isdecimal():
             return error("categoria_id debe ser un número entero")
         consulta = consulta.filter(Producto.categoria_id == int(categoria_id))
 

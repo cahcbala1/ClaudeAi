@@ -22,13 +22,18 @@ PATRON_USERNAME = re.compile(r"^[A-Za-z0-9_.]{3,50}$")
 
 def validar_campos(datos):
     """Valida los campos que vengan en "datos". Devuelve un mensaje de error o None."""
+    # Deben ser texto: str(None) daría "None" y pasaría las validaciones.
+    for campo in ("nombre", "username", "password"):
+        if campo in datos and not isinstance(datos[campo], str):
+            return f"El campo '{campo}' debe ser texto"
+
     if "nombre" in datos:
-        nombre = str(datos["nombre"]).strip()
+        nombre = datos["nombre"].strip()
         if not 2 <= len(nombre) <= 100:
             return "El nombre debe tener entre 2 y 100 caracteres"
 
     if "username" in datos:
-        if not PATRON_USERNAME.match(str(datos["username"]).strip()):
+        if not PATRON_USERNAME.match(datos["username"].strip()):
             return "El usuario debe tener de 3 a 50 caracteres (letras, números, punto o guion bajo)"
 
     if "password" in datos:

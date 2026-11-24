@@ -17,10 +17,13 @@ export default function Reportes() {
     let vigente = true; // ignora respuestas de una consulta anterior
     const [anio, numeroMes] = mes.split("-");
     const ruta = modo === "dia" ? `/reportes/dia?fecha=${fecha}` : `/reportes/mes?anio=${anio}&mes=${Number(numeroMes)}`;
-    if ((modo === "dia" && !fecha) || (modo === "mes" && !mes)) return;
-
     setRespuesta(null);
     setError("");
+    if ((modo === "dia" && !fecha) || (modo === "mes" && !mes)) {
+      setError(modo === "dia" ? "Elige un día." : "Elige un mes.");
+      return;
+    }
+
     api(ruta)
       .then((r) => vigente && setRespuesta({ modo, datos: r }))
       .catch((e) => vigente && setError(e.message));
@@ -33,8 +36,9 @@ export default function Reportes() {
   // los datos del reporte diario no traen "por_dia", así que solo se usan si son del modo actual.
   const datos = respuesta?.modo === modo ? respuesta.datos : null;
 
-  const textoPeriodo =
-    modo === "dia"
+  const textoPeriodo = !datos || !(modo === "dia" ? fecha : mes)
+    ? ""
+    : modo === "dia"
       ? new Date(`${fecha}T00:00`).toLocaleDateString("es", { weekday: "long", day: "numeric", month: "long", year: "numeric" })
       : new Date(`${mes}-01T00:00`).toLocaleDateString("es", { month: "long", year: "numeric" });
   // Solo la primera letra en mayúscula ("Martes, 24 de noviembre de 2026").

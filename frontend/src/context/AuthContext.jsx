@@ -8,6 +8,7 @@ export function AuthProvider({ children }) {
   const [usuario, setUsuario] = useState(null);
   // Mientras se valida un token guardado, no se decide a dónde redirigir.
   const [cargando, setCargando] = useState(Boolean(obtenerToken()));
+  const [errorInicio, setErrorInicio] = useState("");
 
   const cerrarSesion = useCallback(() => {
     borrarToken();
@@ -23,9 +24,17 @@ export function AuthProvider({ children }) {
     if (!obtenerToken()) return;
     api("/auth/me")
       .then(setUsuario)
-      .catch(cerrarSesion)
+      .catch((e) => {
+        // Solo un 401 significa que el token ya no sirve. Si el servidor no responde
+        // (por ejemplo, se está reiniciando), se conserva la sesión para reintentar.
+        if (e.estado === 401) cerrarSesion();
+        else setErrorInicio(e.message);
+      })
       .finally(() => setCargando(false));
   }, [cerrarSesion]);
+
+  // Actualiza los datos del usuario de la sesión (por ejemplo, si edita su propio nombre).
+  const actualizarUsuario = useCallback((datos) => setUsuario((actual) => ({ ...actual, ...datos })), []);
 
   const iniciarSesion = async (username, password) => {
     const { access_token, usuario } = await api("/auth/login", {
@@ -38,7 +47,7 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ usuario, cargando, iniciarSesion, cerrarSesion }}>
+    <AuthContext.Provider value={{ usuario, cargando, errorInicio, iniciarSesion, cerrarSesion, actualizarUsuario }}>
       {children}
     </AuthContext.Provider>
   );

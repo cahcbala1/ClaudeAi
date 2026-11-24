@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { api } from "../../api/client.js";
+import { usePeticionVigente } from "../../utils/peticiones.js";
 import ModalCobro from "../../components/ModalCobro.jsx";
 import TarjetaPedido from "../../components/TarjetaPedido.jsx";
 import { NOMBRE_ESTADO } from "../../estados.js";
@@ -19,20 +20,24 @@ export default function Pedidos() {
   const [aviso, setAviso] = useState("");
   const [cobrando, setCobrando] = useState(null);
 
+  const nuevaPeticion = usePeticionVigente();
   const cargar = useCallback(async () => {
     const parametros = new URLSearchParams();
     if (estado) parametros.set("estado", estado);
     if (/^\d+$/.test(mesa)) parametros.set("mesa", mesa);
     if (fecha) parametros.set("fecha", fecha);
+    const vigente = nuevaPeticion();
     try {
-      setPedidos(await api(`/pedidos?${parametros}`));
+      const respuesta = await api(`/pedidos?${parametros}`);
+      if (!vigente()) return;
+      setPedidos(respuesta);
       setError("");
     } catch (e) {
-      setError(e.message);
+      if (vigente()) setError(e.message);
     } finally {
       setCargando(false);
     }
-  }, [estado, mesa, fecha]);
+  }, [estado, mesa, fecha, nuevaPeticion]);
 
   useEffect(() => {
     cargar();

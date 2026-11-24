@@ -1,13 +1,14 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { api } from "../../api/client.js";
+import { usePeticionVigente } from "../../utils/peticiones.js";
 import Modal from "../../components/Modal.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
 import { NOMBRE_ROL } from "../../roles.js";
 
 // Los usuarios no se eliminan: se desactivan para conservar su historial.
 export default function Usuarios() {
-  const { usuario: yo } = useAuth();
+  const { usuario: yo, actualizarUsuario } = useAuth();
   const [usuarios, setUsuarios] = useState([]);
   const [filtroRol, setFiltroRol] = useState("");
   const [filtroActivo, setFiltroActivo] = useState("");
@@ -16,19 +17,23 @@ export default function Usuarios() {
   // null = formulario cerrado, {} = nuevo usuario, objeto = usuario a editar.
   const [editando, setEditando] = useState(null);
 
+  const nuevaPeticion = usePeticionVigente();
   const cargar = useCallback(async () => {
     const parametros = new URLSearchParams();
     if (filtroRol) parametros.set("rol", filtroRol);
     if (filtroActivo) parametros.set("activo", filtroActivo);
+    const vigente = nuevaPeticion();
     try {
+      const respuesta = await api(`/usuarios?${parametros}`);
+      if (!vigente()) return;
       setError("");
-      setUsuarios(await api(`/usuarios?${parametros}`));
+      setUsuarios(respuesta);
     } catch (e) {
-      setError(e.message);
+      if (vigente()) setError(e.message);
     } finally {
       setCargando(false);
     }
-  }, [filtroRol, filtroActivo]);
+  }, [filtroRol, filtroActivo, nuevaPeticion]);
 
   useEffect(() => {
     cargar();
@@ -44,7 +49,9 @@ export default function Usuarios() {
     }
   };
 
-  const alGuardar = () => {
+  const alGuardar = (guardado) => {
+    // Si el administrador editó sus propios datos, se reflejan en la barra superior y el panel.
+    if (guardado.id === yo.id) actualizarUsuario(guardado);
     setEditando(null);
     cargar();
   };
@@ -157,11 +164,11 @@ function FormUsuario({ usuario, esPropio, onGuardado, onCerrar }) {
     setError("");
     setEnviando(true);
     try {
-      await api(esNuevo ? "/usuarios" : `/usuarios/${usuario.id}`, {
+      const guardado = await api(esNuevo ? "/usuarios" : `/usuarios/${usuario.id}`, {
         metodo: esNuevo ? "POST" : "PUT",
         datos,
       });
-      onGuardado();
+      onGuardado(guardado);
     } catch (err) {
       setError(err.message);
       setEnviando(false);
