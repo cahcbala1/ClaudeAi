@@ -5,7 +5,12 @@ import { NOMBRE_ROL } from "../roles.js";
 
 // Enlaces del menú según el rol. Las páginas se irán agregando en las siguientes etapas.
 const MENU = {
-  admin: [{ a: "/admin", texto: "Inicio" }],
+  admin: [
+    { a: "/admin", texto: "Inicio" },
+    { a: "/admin/usuarios", texto: "Usuarios" },
+    { a: "/admin/categorias", texto: "Categorías" },
+    { a: "/admin/productos", texto: "Productos" },
+  ],
   mesero: [{ a: "/mesero", texto: "Inicio" }],
   cocina: [{ a: "/cocina", texto: "Inicio" }],
 };
