@@ -288,6 +288,17 @@ button:disabled { opacity: 0.6; cursor: default; }
 .indicador strong { font-size: 1.5rem; font-variant-numeric: tabular-nums; }
 .indicador.principal strong { font-size: 1.9rem; }
 .etiqueta-indicador { font-size: 0.85rem; color: var(--color-suave); }
+.nota-indicador { font-size: 0.8rem; color: var(--color-suave); }
+.indicador.enlace { color: inherit; text-decoration: none; transition: border-color 0.15s; }
+.indicador.enlace:hover, .indicador.enlace:focus-visible { border-color: var(--color-primario); }
+
+/* ---------- Panel de inicio del administrador ---------- */
+.subtitulo-panel { margin: 0.25rem 0 0; color: var(--color-suave); }
+.titulo-atajos { margin: 1.5rem 0 0.75rem; }
+.atajos { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.75rem; }
+.atajo { display: flex; flex-direction: column; gap: 0.25rem; padding: 0.9rem 1rem; background: var(--color-tarjeta); border: 1px solid var(--color-borde); border-radius: 8px; color: inherit; text-decoration: none; }
+.atajo span { font-size: 0.85rem; color: var(--color-suave); }
+.atajo:hover, .atajo:focus-visible { border-color: var(--color-primario); }
 
 .dos-columnas { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
 @media (max-width: 800px) { .dos-columnas { grid-template-columns: 1fr; } }

@@ -3,7 +3,7 @@ import { NavLink, Outlet } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 import { NOMBRE_ROL } from "../roles.js";
 
-// Enlaces del menú según el rol. Las páginas se irán agregando en las siguientes etapas.
+// Enlaces del menú según el rol.
 const MENU = {
   admin: [
     { a: "/admin", texto: "Inicio" },

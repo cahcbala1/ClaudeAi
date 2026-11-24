@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { api } from "../../api/client.js";
+import Indicador from "../../components/Indicador.jsx";
 import { NOMBRE_METODO } from "../../estados.js";
 import { fechaDeHoy, formatearPrecio } from "../../utils/formato.js";
 
@@ -165,15 +166,6 @@ export default function Reportes() {
         </>
       )}
     </section>
-  );
-}
-
-function Indicador({ etiqueta, valor, principal = false }) {
-  return (
-    <div className={`indicador ${principal ? "principal" : ""}`}>
-      <span className="etiqueta-indicador">{etiqueta}</span>
-      <strong>{valor}</strong>
-    </div>
   );
 }
 

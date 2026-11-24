@@ -2,10 +2,10 @@ import { Navigate, Route, Routes } from "react-router-dom";
 
 import Layout from "./components/Layout.jsx";
 import RutaProtegida from "./components/RutaProtegida.jsx";
-import Inicio from "./pages/Inicio.jsx";
 import Login from "./pages/Login.jsx";
 import Categorias from "./pages/admin/Categorias.jsx";
 import Pagos from "./pages/admin/Pagos.jsx";
+import Panel from "./pages/admin/Panel.jsx";
 import Pedidos from "./pages/admin/Pedidos.jsx";
 import Productos from "./pages/admin/Productos.jsx";
 import Reportes from "./pages/admin/Reportes.jsx";
@@ -22,7 +22,7 @@ export default function App() {
       <Route element={<RutaProtegida />}>
         <Route element={<Layout />}>
           <Route element={<RutaProtegida roles={["admin"]} />}>
-            <Route path="/admin" element={<Inicio />} />
+            <Route path="/admin" element={<Panel />} />
             <Route path="/admin/usuarios" element={<Usuarios />} />
             <Route path="/admin/categorias" element={<Categorias />} />
             <Route path="/admin/productos" element={<Productos />} />
