@@ -10,15 +10,13 @@ Flujo de estados (quién puede hacer cada cambio):
         │
         └──(mesero dueño o administrador)──► cancelado
 """
-from datetime import datetime, timedelta
-
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import current_user, jwt_required
 
 from ..extensions import db
 from ..models import ESTADOS, DetallePedido, Pedido, Producto
 from ..utils.decorators import rol_requerido
-from ..utils.validators import error, leer_json, limpiar_descripcion
+from ..utils.validators import es_entero, error, leer_json, limpiar_descripcion, rango_de_fecha
 
 bp = Blueprint("pedidos", __name__, url_prefix="/api/pedidos")
 
@@ -43,10 +41,6 @@ ESTADOS_COCINA_POR_DEFECTO = ("pendiente", "en_preparacion")
 
 MESA_MAXIMA = 999
 CANTIDAD_MAXIMA = 100
-
-
-def es_entero(valor):
-    return isinstance(valor, int) and not isinstance(valor, bool)
 
 
 def puede_ver(usuario, pedido):
@@ -121,11 +115,10 @@ def listar():
 
     fecha = request.args.get("fecha")
     if fecha:
-        try:
-            inicio = datetime.strptime(fecha, "%Y-%m-%d")
-        except ValueError:
+        rango = rango_de_fecha(fecha)
+        if rango is None:
             return error("La fecha debe tener el formato AAAA-MM-DD")
-        consulta = consulta.filter(Pedido.creado_en >= inicio, Pedido.creado_en < inicio + timedelta(days=1))
+        consulta = consulta.filter(Pedido.creado_en >= rango[0], Pedido.creado_en < rango[1])
 
     # La cocina atiende primero los pedidos más antiguos; los demás ven primero los recientes.
     if current_user.rol == "cocina":

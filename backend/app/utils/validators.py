@@ -1,4 +1,6 @@
 """Funciones auxiliares para validar los datos que recibe la API."""
+from datetime import datetime, timedelta
+
 from flask import jsonify, request
 
 
@@ -24,6 +26,23 @@ def limpiar_descripcion(valor):
         return None
     texto = str(valor).strip()
     return texto or None
+
+
+def es_entero(valor):
+    """True si el valor es un entero de JSON (True/False no cuentan como enteros)."""
+    return isinstance(valor, int) and not isinstance(valor, bool)
+
+
+def rango_de_fecha(texto):
+    """Convierte "AAAA-MM-DD" en (inicio, fin) de ese día para filtrar por fecha.
+
+    Devuelve None si el texto no tiene el formato correcto.
+    """
+    try:
+        inicio = datetime.strptime(texto, "%Y-%m-%d")
+    except ValueError:
+        return None
+    return inicio, inicio + timedelta(days=1)
 
 
 def error(mensaje, codigo=400):
