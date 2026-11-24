@@ -9,7 +9,7 @@ export default function Reportes() {
   const [modo, setModo] = useState("dia");
   const [fecha, setFecha] = useState(fechaDeHoy());
   const [mes, setMes] = useState(fechaDeHoy().slice(0, 7)); // AAAA-MM
-  const [datos, setDatos] = useState(null);
+  const [respuesta, setRespuesta] = useState(null); // { modo, datos }
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -18,20 +18,26 @@ export default function Reportes() {
     const ruta = modo === "dia" ? `/reportes/dia?fecha=${fecha}` : `/reportes/mes?anio=${anio}&mes=${Number(numeroMes)}`;
     if ((modo === "dia" && !fecha) || (modo === "mes" && !mes)) return;
 
-    setDatos(null);
+    setRespuesta(null);
     setError("");
     api(ruta)
-      .then((r) => vigente && setDatos(r))
+      .then((r) => vigente && setRespuesta({ modo, datos: r }))
       .catch((e) => vigente && setError(e.message));
     return () => {
       vigente = false;
     };
   }, [modo, fecha, mes]);
 
-  const titulo =
+  // Al cambiar de pestaña hay un render antes de que el efecto limpie la respuesta:
+  // los datos del reporte diario no traen "por_dia", así que solo se usan si son del modo actual.
+  const datos = respuesta?.modo === modo ? respuesta.datos : null;
+
+  const textoPeriodo =
     modo === "dia"
       ? new Date(`${fecha}T00:00`).toLocaleDateString("es", { weekday: "long", day: "numeric", month: "long", year: "numeric" })
       : new Date(`${mes}-01T00:00`).toLocaleDateString("es", { month: "long", year: "numeric" });
+  // Solo la primera letra en mayúscula ("Martes, 24 de noviembre de 2026").
+  const titulo = textoPeriodo.charAt(0).toUpperCase() + textoPeriodo.slice(1);
 
   return (
     <section>

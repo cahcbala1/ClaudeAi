@@ -282,7 +282,7 @@ button:disabled { opacity: 0.6; cursor: default; }
 .pestanas button:hover:not(.activa) { background: var(--color-fondo); }
 .pestanas button.activa { background: var(--color-primario); color: #fff; }
 
-.titulo-periodo { margin: 0.5rem 0 1rem; text-transform: capitalize; }
+.titulo-periodo { margin: 0.5rem 0 1rem; }
 .indicadores { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.75rem; margin-bottom: 1.5rem; }
 .indicador { display: flex; flex-direction: column; gap: 0.3rem; padding: 1rem; background: var(--color-tarjeta); border: 1px solid var(--color-borde); border-radius: 8px; }
 .indicador strong { font-size: 1.5rem; font-variant-numeric: tabular-nums; }
