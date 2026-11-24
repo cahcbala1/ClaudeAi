@@ -265,6 +265,48 @@ button:disabled { opacity: 0.6; cursor: default; }
 .cantidad { display: flex; align-items: center; gap: 0.3rem; }
 .cantidad span { min-width: 1.5rem; text-align: center; font-variant-numeric: tabular-nums; }
 .cantidad button { padding: 0.2rem 0.55rem; }
+/* ---------- Cobro, pagos y reportes ---------- */
+.etiqueta.pendiente-pago { background: #fef3c7; color: #92400e; }
+.tarjeta-pedido footer .etiqueta { margin-left: 0.5rem; }
+
+.opciones { border: none; padding: 0; margin: 0; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.opciones legend { font-size: 0.9rem; margin-bottom: 0.4rem; }
+.opcion { flex: 1; display: flex; align-items: center; gap: 0.4rem; padding: 0.6rem 0.75rem; border: 1px solid var(--color-borde); border-radius: 6px; cursor: pointer; }
+.opcion input { width: auto; margin: 0; }
+.opcion.elegida { border-color: var(--color-primario); background: #fff7ed; }
+
+.tabla tfoot td { border-top: 2px solid var(--color-borde); border-bottom: none; }
+
+.pestanas { display: flex; align-self: flex-end; border: 1px solid var(--color-borde); border-radius: 6px; overflow: hidden; }
+.pestanas button { border-radius: 0; background: var(--color-tarjeta); color: var(--color-texto); }
+.pestanas button:hover:not(.activa) { background: var(--color-fondo); }
+.pestanas button.activa { background: var(--color-primario); color: #fff; }
+
+.titulo-periodo { margin: 0.5rem 0 1rem; text-transform: capitalize; }
+.indicadores { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.75rem; margin-bottom: 1.5rem; }
+.indicador { display: flex; flex-direction: column; gap: 0.3rem; padding: 1rem; background: var(--color-tarjeta); border: 1px solid var(--color-borde); border-radius: 8px; }
+.indicador strong { font-size: 1.5rem; font-variant-numeric: tabular-nums; }
+.indicador.principal strong { font-size: 1.9rem; }
+.etiqueta-indicador { font-size: 0.85rem; color: var(--color-suave); }
+
+.dos-columnas { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+@media (max-width: 800px) { .dos-columnas { grid-template-columns: 1fr; } }
+.dos-columnas h4, .grafico h4 { margin: 0 0 0.6rem; }
+
+.grafico { padding: 1rem; margin-bottom: 1.5rem; background: var(--color-tarjeta); border: 1px solid var(--color-borde); border-radius: 8px; }
+.grafico-cabecera { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap; }
+.grafico-lectura { font-size: 0.9rem; color: var(--color-suave); font-variant-numeric: tabular-nums; }
+.grafico-area { display: flex; height: 180px; border-bottom: 1px solid var(--color-borde); }
+.grafico-dia { flex: 1; display: flex; flex-direction: column; cursor: default; outline: none; min-width: 0; }
+.grafico-zona { flex: 1; display: flex; align-items: flex-end; padding: 0 1px; }
+.grafico-dia.elegido .grafico-zona, .grafico-dia:focus-visible .grafico-zona { background: var(--color-fondo); }
+.grafico-barra { width: 100%; background: var(--color-primario); border-radius: 4px 4px 0 0; }
+.grafico-dia.elegido .grafico-barra { background: var(--color-primario-oscuro); }
+.grafico-etiqueta { height: 0; overflow: visible; text-align: center; font-size: 0.75rem; color: var(--color-suave); transform: translateY(0.3rem); }
+.grafico { padding-bottom: 1.75rem; }
+
+.detalle-tabla summary { cursor: pointer; color: var(--color-suave); margin-bottom: 0.6rem; }
+
 /* ---------- Tablero de cocina ---------- */
 .tablero { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; align-items: start; }
 @media (max-width: 900px) { .tablero { grid-template-columns: 1fr; } }

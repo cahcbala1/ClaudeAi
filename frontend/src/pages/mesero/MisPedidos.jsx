@@ -2,9 +2,10 @@ import { useCallback, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { api } from "../../api/client.js";
+import ModalCobro from "../../components/ModalCobro.jsx";
 import TarjetaPedido from "../../components/TarjetaPedido.jsx";
 import { NOMBRE_ESTADO } from "../../estados.js";
-import { fechaDeHoy } from "../../utils/formato.js";
+import { fechaDeHoy, formatearPrecio } from "../../utils/formato.js";
 
 // Cada cuánto se vuelve a consultar la lista, para ver los cambios que hace la cocina.
 const INTERVALO_MS = 15000;
@@ -19,6 +20,7 @@ export default function MisPedidos() {
   const [error, setError] = useState("");
   // Mensaje que deja la pantalla "Nuevo pedido" al registrar uno.
   const [aviso, setAviso] = useState(location.state?.aviso ?? "");
+  const [cobrando, setCobrando] = useState(null);
 
   // Se limpia el aviso del historial para que no reaparezca al recargar.
   useEffect(() => {
@@ -112,6 +114,11 @@ export default function MisPedidos() {
                   Marcar entregado
                 </button>
               )}
+              {p.estado === "entregado" && !p.pagado && (
+                <button type="button" onClick={() => setCobrando(p)}>
+                  Cobrar
+                </button>
+              )}
               {p.estado === "pendiente" && (
                 <button type="button" className="boton-peligro" onClick={() => cambiarEstado(p, "cancelado")}>
                   Cancelar
@@ -120,6 +127,18 @@ export default function MisPedidos() {
             </TarjetaPedido>
           ))}
         </div>
+      )}
+
+      {cobrando && (
+        <ModalCobro
+          pedido={cobrando}
+          onCobrado={() => {
+            setAviso(`Pago del pedido #${cobrando.id} registrado (${formatearPrecio(cobrando.total)}).`);
+            setCobrando(null);
+            cargar();
+          }}
+          onCerrar={() => setCobrando(null)}
+        />
       )}
     </section>
   );

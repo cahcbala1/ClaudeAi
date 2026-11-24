@@ -2,13 +2,15 @@ import { NOMBRE_ESTADO } from "../estados.js";
 import { formatearHora, formatearPrecio } from "../utils/formato.js";
 
 // Muestra un pedido con sus productos. Los botones de acción los decide cada pantalla.
-export default function TarjetaPedido({ pedido, children }) {
+// mostrarMesero: el administrador ve quién registró cada pedido.
+export default function TarjetaPedido({ pedido, mostrarMesero = false, children }) {
   return (
     <article className={`tarjeta-pedido estado-${pedido.estado}`}>
       <header>
         <div>
           <strong>Mesa {pedido.mesa}</strong>
           <span className="nota"> · Pedido #{pedido.id} · {formatearHora(pedido.creado_en)}</span>
+          {mostrarMesero && <div className="nota">Mesero: {pedido.mesero}</div>}
         </div>
         <span className={`estado estado-${pedido.estado}`}>{NOMBRE_ESTADO[pedido.estado]}</span>
       </header>
@@ -27,7 +29,14 @@ export default function TarjetaPedido({ pedido, children }) {
       {pedido.observaciones && <p className="observaciones">📝 {pedido.observaciones}</p>}
 
       <footer>
-        <strong>Total: {formatearPrecio(pedido.total)}</strong>
+        <div>
+          <strong>Total: {formatearPrecio(pedido.total)}</strong>
+          {pedido.estado === "entregado" && (
+            <span className={`etiqueta ${pedido.pagado ? "ok" : "pendiente-pago"}`}>
+              {pedido.pagado ? "Pagado" : "Por cobrar"}
+            </span>
+          )}
+        </div>
         {children && <div className="acciones-pedido">{children}</div>}
       </footer>
     </article>

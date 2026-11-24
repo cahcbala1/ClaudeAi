@@ -6,3 +6,10 @@ export const NOMBRE_ESTADO = {
   entregado: "Entregado",
   cancelado: "Cancelado",
 };
+
+// Métodos de pago que acepta la API.
+export const NOMBRE_METODO = {
+  efectivo: "Efectivo",
+  tarjeta: "Tarjeta",
+  transferencia: "Transferencia",
+};

@@ -10,6 +10,9 @@ const MENU = {
     { a: "/admin/usuarios", texto: "Usuarios" },
     { a: "/admin/categorias", texto: "Categorías" },
     { a: "/admin/productos", texto: "Productos" },
+    { a: "/admin/pedidos", texto: "Pedidos" },
+    { a: "/admin/pagos", texto: "Pagos" },
+    { a: "/admin/reportes", texto: "Reportes" },
   ],
   mesero: [
     { a: "/mesero", texto: "Mis pedidos" },
