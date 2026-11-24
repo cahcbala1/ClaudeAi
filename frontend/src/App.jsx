@@ -7,6 +7,8 @@ import Login from "./pages/Login.jsx";
 import Categorias from "./pages/admin/Categorias.jsx";
 import Productos from "./pages/admin/Productos.jsx";
 import Usuarios from "./pages/admin/Usuarios.jsx";
+import MisPedidos from "./pages/mesero/MisPedidos.jsx";
+import NuevoPedido from "./pages/mesero/NuevoPedido.jsx";
 
 export default function App() {
   return (
@@ -22,7 +24,8 @@ export default function App() {
             <Route path="/admin/productos" element={<Productos />} />
           </Route>
           <Route element={<RutaProtegida roles={["mesero"]} />}>
-            <Route path="/mesero" element={<Inicio />} />
+            <Route path="/mesero" element={<MisPedidos />} />
+            <Route path="/mesero/nuevo" element={<NuevoPedido />} />
           </Route>
           <Route element={<RutaProtegida roles={["cocina"]} />}>
             <Route path="/cocina" element={<Inicio />} />
