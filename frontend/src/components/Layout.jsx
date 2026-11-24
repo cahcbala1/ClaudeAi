@@ -15,7 +15,7 @@ const MENU = {
     { a: "/mesero", texto: "Mis pedidos" },
     { a: "/mesero/nuevo", texto: "Nuevo pedido" },
   ],
-  cocina: [{ a: "/cocina", texto: "Inicio" }],
+  cocina: [{ a: "/cocina", texto: "Pedidos" }],
 };
 
 export default function Layout() {

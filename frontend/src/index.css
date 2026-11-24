@@ -265,4 +265,15 @@ button:disabled { opacity: 0.6; cursor: default; }
 .cantidad { display: flex; align-items: center; gap: 0.3rem; }
 .cantidad span { min-width: 1.5rem; text-align: center; font-variant-numeric: tabular-nums; }
 .cantidad button { padding: 0.2rem 0.55rem; }
+/* ---------- Tablero de cocina ---------- */
+.tablero { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; align-items: start; }
+@media (max-width: 900px) { .tablero { grid-template-columns: 1fr; } }
+.columna { display: flex; flex-direction: column; gap: 0.75rem; padding: 0.75rem; background: #efebe5; border-radius: 10px; }
+.columna h3 { margin: 0; font-size: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+.columna .vacio { padding: 0.5rem 0; }
+.contador-columna { padding: 0.05rem 0.55rem; border-radius: 999px; background: var(--color-tarjeta); font-size: 0.85rem; }
+.espera { font-size: 0.85rem; color: var(--color-suave); align-self: center; }
+.demorado .tarjeta-pedido { box-shadow: 0 0 0 2px #fca5a5; }
+.demorado .espera { color: var(--color-error); font-weight: 600; }
+
 .total-pedido { display: flex; justify-content: space-between; font-size: 1.1rem; padding-top: 0.6rem; border-top: 1px solid var(--color-borde); }
